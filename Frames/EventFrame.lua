@@ -14,15 +14,12 @@ if LibRu.ShouldLoad == false then return end
 --- @field _eventHandlers table<string, {callback: function, handle: number}[]>
 --- @field _nextEventHandle number
 local EventFrame = {}
-EventFrame.__index = EventFrame
 
---- Creates a new EventFrame instance
---- @param frame Frame Optional WoW frame to attach to. If nil, creates a new Frame.
---- @return EventFrame newFrame new EventFrame instance
+
 function EventFrame.New(frame)
     ---@type EventFrame
     local self = frame or CreateFrame("Frame")
-    setmetatable(self, EventFrame)
+    Mixin(self, EventFrame)               -- keep Frame methods, add ours
     self._eventHandlers = {}
     self._nextEventHandle = 0
     return self
@@ -33,7 +30,8 @@ end
 --- to dispatch to all registered handlers for that event.
 --- @param self EventFrame The EventFrame instance.
 --- @param event string The name of the event to listen for.
---- @param callback function The function to call when the event is triggered. Must be a function.
+--- Registers a callback function to be triggered when a specific event occurs.
+--- @param callback fun(handle: number, event: string, ...: any) The function to call when the event is triggered. 
 --- @return number A unique handle for the registered event handler, which can be used for removal.
 --- @error Throws an error if the callback is not a function.
 function EventFrame:AddEvent(event, callback)

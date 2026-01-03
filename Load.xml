@@ -7,7 +7,10 @@
     <!-- Load order is important.-->
     <Script file="RegisterLibs.lua"/>
     <Script file="LibRu.lua"/>
-    <Script file="EventFrame.lua"/>
+
+    <!-- Frames -->
+    <Script file="Frames/ValueSlider.lua"/>
+    <Script file="Frames/EventFrame.lua"/>
     
     
     <Script file="Utility.lua"/>
