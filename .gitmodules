@@ -1,0 +1,3 @@
+[submodule "LibManager"]
+	path = LibManager
+	url = https://github.com/ru-the-dev/LibManager
