@@ -5,7 +5,7 @@
 
 
     <!-- Load order is important.-->
-    <Script file="RegisterLib.lua"/>
+    <Script file="RegisterLibs.lua"/>
     <Script file="EventMixin.lua"/>
     <Script file="LibRu.lua"/>
     
