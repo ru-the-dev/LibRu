@@ -8,6 +8,9 @@
     <Script file="RegisterLibs.lua"/>
     <Script file="LibRu.lua"/>
 
+    <!-- Database Utility-->
+    <Script file="Database/DBFactory.lua"/>
+
     <!-- Frames -->
     <Script file="Frames/ValueSlider.lua"/>
     <Script file="Frames/EventFrame.lua"/>
