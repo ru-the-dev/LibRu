@@ -4,9 +4,6 @@ local LibRu = _G["LibRu"];
 if not LibRu.ShouldLoad then return end;
 
 
--- create event frame
-LibRu.EventFrame = Mixin(CreateFrame("Frame"), LibRu.EventMixin);
-
 -- ---Returns all objects inside a frame, including child frames and regions.
 -- ---@param frame Frame Frame The parent frame to scan.
 -- ---@return table children table containing all child frames and regions.

@@ -5,3 +5,4 @@ end
 
 ---@class LibRu : Library
 local LibRu = _G.LibManager.NewLibrary("LibRu", 1, 0);
+

@@ -6,12 +6,10 @@
 
     <!-- Load order is important.-->
     <Script file="RegisterLibs.lua"/>
-    <Script file="EventMixin.lua"/>
     <Script file="LibRu.lua"/>
+    <Script file="EventFrame.lua"/>
+    
     
     <Script file="Utility.lua"/>
-    <!-- <Script file="Frame.lua"/>
-    <Script file="VerticalLayoutFrame.lua"/>
-    <Script file="CollapsiblePanel.lua"/>-->
-    <Script file="DebugFunctions.lua"/> 
+    <Script file="DebugFunctions.lua"/>
 </Ui>

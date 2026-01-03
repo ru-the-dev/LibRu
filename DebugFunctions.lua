@@ -46,4 +46,23 @@ function DebugFunctions.SetTableAttributeDisplayWidth(desiredWidth)
     end
 end
 
+function DebugFunctions.TableToString(t, indent, seen)
+    indent = indent or 0
+    seen = seen or {}
+    if type(t) ~= "table" then return tostring(t) end
+    if seen[t] then return "<cycle>" end
+    seen[t] = true
+    local pad = string.rep(" ", indent)
+    local parts = {"{\n"}
+    for k, v in pairs(t) do
+        local key = type(k) == "string" and string.format("%q", k) or tostring(k)
+        local val = (type(v) == "table") and DebugFunctions.TableToString(v, indent + 2, seen) or
+                    (type(v) == "string" and string.format("%q", v) or tostring(v))
+        table.insert(parts, string.format("%s  [%s] = %s,\n", pad, key, val))
+    end
+    table.insert(parts, pad .. "}")
+    return table.concat(parts)
+end
+
+
 LibRu.Debug = DebugFunctions;
