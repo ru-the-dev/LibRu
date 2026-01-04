@@ -1,5 +1,5 @@
 -- Factory:
---   local MyDB = TransmogResize_NewDB("SavedVariableName", DefaultsTable)
+--   local MyDB = NewDatabase("SavedVariableName", DefaultsTable)
 --   MyDB:Init()  -- once on ADDON_LOADED
 --   MyDB:Get()
 --   MyDB:ResetAll()
