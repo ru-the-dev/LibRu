@@ -12,7 +12,7 @@ if LibRu.ShouldLoad == false then return end
 -- Initialize the Frames table in LibRu if it doesn't exist
 LibRu.Frames = LibRu.Frames or {}
 
---- @class Slider : Slider
+--- @class Slider
 --- @field _bindTable table  -- Table to bind the slider value
 --- @field _bindKey string   -- Key in the bindTable for the slider value
 --- @field _min number       -- Minimum value of the slider
@@ -68,6 +68,10 @@ function Slider.New(parent, name, labelText, min, max, step, bindTable, bindKey,
         self._bindTable[self._bindKey] = iv -- Update the bound table with the new value
         setValueText(self._valueText, iv, self._format) -- Update the displayed value text
     end)
+    
+    -- Initialize the slider's value from the binding
+    slider:SetValue(bindTable[bindKey] or min)
+    setValueText(slider._valueText, bindTable[bindKey] or min, slider._format)
 
     return slider -- Return the created slider
 end
