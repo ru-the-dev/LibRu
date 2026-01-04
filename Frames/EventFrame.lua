@@ -131,7 +131,7 @@ end
 --- Multiple handlers can be added for the same script type.
 --- @param self EventFrame The EventFrame instance.
 --- @param scriptType string The script type (e.g., "OnShow", "OnHide", "OnUpdate") or custom name (e.g., "BT_TRANSMOG_UPDATED").
---- @param callback function The function to call when the script fires.
+--- @param callback fun(handle: number, ...: any) The function to call when the script fires.
 --- @return number A unique handle for the script handler, which can be used for removal.
 function EventFrame:AddScript(scriptType, callback)
     if type(callback) ~= "function" then error("Callback must be a function") end
@@ -153,10 +153,18 @@ function EventFrame:AddScript(scriptType, callback)
     
     -- If this is the first handler, set up the base script
     if #self._scriptHandlers[scriptType] == 1 then
-        -- Preserve existing script if it exists
-        local existingScript = self:GetScript(scriptType)
+        -- Preserve existing script if it exists (only works for valid WoW frame scripts)
+        local existingScript = nil
+        local success
+        success, existingScript = pcall(function() return self:GetScript(scriptType) end)
+        if not success then existingScript = nil end
         
-        self:SetScript(scriptType, function(self, ...)
+        -- For custom scripts, don't use SetScript (it will error)
+        -- Just store handlers and rely on FireScript to trigger them
+        local isCustomScript = not pcall(function() self:SetScript(scriptType, function() end) end)
+        
+        if not isCustomScript then
+            self:SetScript(scriptType, function(self, ...)
             -- Call the original script first (if it existed)
             if existingScript then
                 existingScript(self, ...)
@@ -190,7 +198,8 @@ function EventFrame:AddScript(scriptType, callback)
                     self._scriptHandlers[scriptType] = nil
                 end
             end
-        end)
+            end)
+        end
     end
     
     return handle
