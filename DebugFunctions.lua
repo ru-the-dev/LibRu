@@ -12,6 +12,40 @@ if LibRu.ShouldLoad == false then return end
 
 local DebugFunctions = {};
 
+function DebugFunctions.GetTableAttributeDisplayWidth()
+    if TableAttributeDisplay then
+        return TableAttributeDisplay:GetWidth()
+    end
+    return nil
+end
+
+function DebugFunctions.GetTableAttributeDisplayHeight()
+    if TableAttributeDisplay then
+        return TableAttributeDisplay:GetHeight()
+    end
+    return nil
+end
+
+function DebugFunctions.SetTableAttributeDisplayHeight(desiredHeight)
+    -- Ensure minimum height
+    desiredHeight = math.max(desiredHeight or 300, 150)
+    
+    print("Setting TableAttributeDisplay height to:", desiredHeight)
+    
+    -- Define margins for better maintainability
+    local FRAME_PADDING = 40        -- Padding for title bar and bottom
+    local SCROLL_PADDING = 10       -- Additional padding for scroll area
+    
+    -- Calculate effective heights
+    local scrollFrameHeight = desiredHeight - FRAME_PADDING
+    
+    -- Set main frame height
+    TableAttributeDisplay:SetHeight(desiredHeight)
+    
+    -- Set scroll frame height
+    TableAttributeDisplay.LinesScrollFrame:SetHeight(scrollFrameHeight)
+end
+
 function DebugFunctions.SetTableAttributeDisplayWidth(desiredWidth)
     -- Ensure minimum width
     desiredWidth = math.max(desiredWidth or 400, 200)
