@@ -97,5 +97,29 @@ function NewDatabase(svName, defaults)
         return parent[key]
     end
 
+    -- Set up metatable to proxy field access to the actual data after Init
+    setmetatable(API, {
+        __index = function(t, k)
+            -- If it's an API method, return it
+            if rawget(t, k) then return rawget(t, k) end
+            -- Otherwise, try to get from the saved variable
+            if initialized and _G[svName] then
+                return _G[svName][k]
+            end
+            return nil
+        end,
+        __newindex = function(t, k, v)
+            -- Don't allow overwriting API methods
+            if rawget(t, k) ~= nil then
+                rawset(t, k, v)
+            elseif initialized and _G[svName] then
+                -- Set on the actual data table
+                _G[svName][k] = v
+            else
+                rawset(t, k, v)
+            end
+        end
+    })
+
     return API
 end
