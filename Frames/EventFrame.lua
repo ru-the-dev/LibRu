@@ -88,7 +88,7 @@ function EventFrame.New(frame)
             if entry.removed then
                 hasRemovals = true
             else
-                entry.callback(self, entry.handle, ...)
+                entry.callback(self, entry.handle, event, ...)
             end
         end
         
