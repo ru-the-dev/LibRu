@@ -20,6 +20,53 @@ local EventFrame = {}
 
 
 function EventFrame.New(frame)
+    -- Capture all existing Frame scripts before converting to EventFrame
+    local originalScripts = {}
+    
+    -- All possible Frame scripts from WoW API
+    -- see: https://warcraft.wiki.gg/wiki/API_ScriptObject_GetScript
+    local frameScripts = {
+        "OnAttributeChanged", "OnChar", "OnDisable", "OnDragStart", "OnDragStop",
+        "OnEnable", "OnEvent", "OnGamePadButtonDown", "OnGamePadButtonUp", "OnGamePadStick",
+        "OnHyperlinkClick", "OnHyperlinkEnter", "OnHyperlinkLeave", "OnKeyDown", "OnKeyUp",
+        "OnReceiveDrag", "OnSizeChanged", "OnUpdate",
+        -- ScriptRegion scripts
+        "OnShow", "OnHide", "OnEnter", "OnLeave", "OnMouseDown", "OnMouseUp", "OnMouseWheel",
+        "OnLoad",
+        -- Button scripts
+        "OnClick", "OnDoubleClick", "PostClick", "PreClick",
+        -- Model/DressUpModel scripts
+        "OnAnimFinished", "OnAnimStarted", "OnModelLoaded", "OnDressModel",
+        -- EditBox scripts
+        "OnArrowPressed", "OnCharComposition", "OnCursorChanged", "OnEditFocusGained",
+        "OnEditFocusLost", "OnEnterPressed", "OnEscapePressed", "OnSpacePressed",
+        "OnInputLanguageChanged", "OnTabPressed", "OnTextChanged", "OnTextSet",
+        -- ScrollFrame scripts
+        "OnHorizontalScroll", "OnScrollRangeChanged", "OnVerticalScroll",
+        -- Slider/StatusBar scripts
+        "OnMinMaxChanged", "OnValueChanged",
+        -- Tooltip scripts
+        "OnTooltipCleared", "OnTooltipSetDefaultAnchor", "OnTooltipSetFramestack",
+        "OnTooltipAddMoney", "OnTooltipSetAchievement", "OnTooltipSetEquipmentSet",
+        "OnTooltipSetItem", "OnTooltipSetQuest", "OnTooltipSetSpell", "OnTooltipSetUnit",
+        -- ColorSelect
+        "OnColorSelect",
+        -- Cooldown
+        "OnCooldownDone",
+        -- MovieFrame
+        "OnMovieFinished",
+        -- FogOfWarFrame
+        "OnUiMapChanged"
+    }
+    
+    -- Store any scripts that exist on this frame (safely check with pcall)
+    for _, scriptType in ipairs(frameScripts) do
+        local success, script = pcall(function() return frame:GetScript(scriptType) end)
+        if success and script then
+            originalScripts[scriptType] = script
+        end
+    end
+    
     ---@type EventFrame
     local self = frame or CreateFrame("Frame")
     Mixin(self, EventFrame)
@@ -61,7 +108,12 @@ function EventFrame.New(frame)
         end
     end)
     
-    return self
+    -- Re-apply all original scripts after conversion
+    for scriptType, originalScript in pairs(originalScripts) do
+        frame:SetScript(scriptType, originalScript)
+    end
+    
+    return frame
 end
 
 --- Adds an event handler callback to the frame for a WoW game event.
