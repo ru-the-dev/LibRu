@@ -13,6 +13,7 @@
 
     <!-- Frames -->
     <Script file="Frames/EventFrame.lua"/>
+    <Script file="Frames/ResizeButton.lua"/>
     <Script file="Frames/ValueSlider.lua"/>
     
     
