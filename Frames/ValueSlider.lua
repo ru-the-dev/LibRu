@@ -85,4 +85,4 @@ function ValueSlider:UpdateFromBinding(defaults)
 end
 
 -- Register the Slider class in LibRu.Frames
-LibRu.Frames.Slider = ValueSlider
+LibRu.Frames.ValueSlider = ValueSlider
