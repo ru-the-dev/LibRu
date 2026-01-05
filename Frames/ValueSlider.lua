@@ -12,12 +12,12 @@ if LibRu.ShouldLoad == false then return end
 -- Initialize the Frames table in LibRu if it doesn't exist
 LibRu.Frames = LibRu.Frames or {}
 
---- @class Slider
+--- @class ValueSlider
 --- @field _bindTable table  -- Table to bind the slider value
 --- @field _bindKey string   -- Key in the bindTable for the slider value
 --- @field _min number       -- Minimum value of the slider
-local Slider = {}
-Slider.__index = Slider
+local ValueSlider = {}
+ValueSlider.__index = ValueSlider
 
 -- Function to set the text of the value display
 local function setValueText(valueText, v, formatValue)
@@ -34,10 +34,10 @@ end
 --- @param bindTable table     -- Table to bind the slider value
 --- @param bindKey string      -- Key in the bindTable for the slider value
 --- @param formatValue fun(v:number):string|nil -- Optional function to format the slider value
-function Slider.New(parent, name, labelText, min, max, step, bindTable, bindKey, formatValue)
+function ValueSlider.New(parent, name, labelText, min, max, step, bindTable, bindKey, formatValue)
     -- Create a new slider frame
     local slider = CreateFrame("Slider", name, parent, "OptionsSliderTemplate")
-    Mixin(slider, Slider) -- Mix in the Slider methods
+    Mixin(slider, ValueSlider) -- Mix in the Slider methods
 
     -- Set properties for the slider
     slider._bindTable = bindTable
@@ -77,7 +77,7 @@ function Slider.New(parent, name, labelText, min, max, step, bindTable, bindKey,
 end
 
 -- Update the slider's value from the binding
-function Slider:UpdateFromBinding(defaults)
+function ValueSlider:UpdateFromBinding(defaults)
     -- Get the current value from the binding table or defaults
     local v = self._bindTable[self._bindKey] or (defaults and defaults[self._bindKey]) or self._min
     self:SetValue(v) -- Set the slider's value
@@ -85,4 +85,4 @@ function Slider:UpdateFromBinding(defaults)
 end
 
 -- Register the Slider class in LibRu.Frames
-LibRu.Frames.Slider = Slider
+LibRu.Frames.Slider = ValueSlider
