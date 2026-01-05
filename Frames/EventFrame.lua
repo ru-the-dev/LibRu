@@ -311,4 +311,5 @@ function EventFrame:RemoveScript(handle)
     return false
 end
 
-LibRu.EventFrame = EventFrame
+LibRu.Frames = LibRu.Frames or {}
+LibRu.Frames.EventFrame = EventFrame

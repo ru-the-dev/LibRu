@@ -36,7 +36,7 @@ end
 --- @param formatValue fun(v:number):string|nil -- Optional function to format the slider value
 function ValueSlider.New(parent, name, labelText, min, max, step, bindTable, bindKey, formatValue)
     -- Create a new slider frame
-    local slider = CreateFrame("Slider", name, parent, "OptionsSliderTemplate")
+    local slider = LibRu.Frames.EventFrame.New(CreateFrame("Slider", name, parent, "OptionsSliderTemplate"))
     Mixin(slider, ValueSlider) -- Mix in the Slider methods
 
     -- Set properties for the slider
@@ -63,7 +63,7 @@ function ValueSlider.New(parent, name, labelText, min, max, step, bindTable, bin
     slider._valueText = valueText -- Store reference to value text
 
     -- Set the script to handle value changes
-    slider:SetScript("OnValueChanged", function(self, v)
+    slider:AddScript("OnValueChanged", function(self, v)
         local iv = math.floor(v + 0.5) -- Round the value to the nearest integer
         self._bindTable[self._bindKey] = iv -- Update the bound table with the new value
         setValueText(self._valueText, iv, self._format) -- Update the displayed value text
