@@ -12,8 +12,9 @@
     <Script file="DBFactory.lua"/>
 
     <!-- Frames -->
-    <Script file="Frames/ValueSlider.lua"/>
     <Script file="Frames/EventFrame.lua"/>
+    <Script file="Frames/ValueSlider.lua"/>
+    
     
     
     <Script file="Utility.lua"/>
