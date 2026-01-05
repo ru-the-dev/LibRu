@@ -17,7 +17,5 @@
     <Script file="Frames/ValueSlider.lua"/>
     
     
-    
-    <Script file="Utility.lua"/>
     <Script file="DebugFunctions.lua"/>
 </Ui>
