@@ -18,7 +18,8 @@ if LibRu.ShouldLoad == false then return end
 --- @field private _isDispatching boolean
 local EventFrame = {}
 
-
+--- Creates a new EventFrame by converting an existing frame or creating a new one.
+--- @return EventFrame The frame with EventFrame functionality mixed in
 function EventFrame.New(frame)
     -- Capture all existing Frame scripts before converting to EventFrame
     local originalScripts = {}
@@ -87,7 +88,7 @@ function EventFrame.New(frame)
             if entry.removed then
                 hasRemovals = true
             else
-                entry.callback(entry.handle, event, ...)
+                entry.callback(self, entry.handle, ...)
             end
         end
         
@@ -119,9 +120,10 @@ end
 --- Adds an event handler callback to the frame for a WoW game event.
 --- Game events are automatically registered with WoW and fired by the game engine.
 --- For custom callbacks, use AddScript() instead.
---- @param self EventFrame The EventFrame instance.
+--- @generic T : EventFrame
+--- @param self T The EventFrame instance.
 --- @param event string The name of the WoW game event to listen for (e.g., "PLAYER_LOGIN", "ADDON_LOADED").
---- @param callback fun(handle: number, event: string, ...: any) The function to call when the event is triggered. 
+--- @param callback fun(self: T, handle: number, event: string, ...: any) The function to call when the event is triggered. 
 --- @return number A unique handle for the registered event handler, which can be used for removal.
 --- @error Throws an error if the callback is not a function.
 function EventFrame:AddEvent(event, callback)
@@ -181,9 +183,10 @@ end
 --- For frame scripts: preserves any existing script behavior and adds the new handler.
 --- For custom callbacks: use FireScript() to manually trigger them.
 --- Multiple handlers can be added for the same script type.
---- @param self EventFrame The EventFrame instance.
+--- @generic T : EventFrame
+--- @param self T The EventFrame instance.
 --- @param scriptType string The script type (e.g., "OnShow", "OnHide", "OnUpdate") or custom name (e.g., "BT_TRANSMOG_UPDATED").
---- @param callback fun(handle: number, ...: any) The function to call when the script fires.
+--- @param callback fun(self: T, handle: number, ...: any) The function to call when the script fires.
 --- @return number A unique handle for the script handler, which can be used for removal.
 function EventFrame:AddScript(scriptType, callback)
     if type(callback) ~= "function" then error("Callback must be a function") end
@@ -232,7 +235,7 @@ function EventFrame:AddScript(scriptType, callback)
                 if entry.removed then
                     hasRemovals = true
                 else
-                    entry.callback(entry.handle, ...)
+                    entry.callback(self, entry.handle, ...)
                 end
             end
             
@@ -274,7 +277,7 @@ function EventFrame:FireScript(scriptType, ...)
         if entry.removed then
             hasRemovals = true
         else
-            entry.callback(entry.handle, ...)
+            entry.callback(self, entry.handle, ...)
         end
     end
     
