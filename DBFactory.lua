@@ -6,12 +6,12 @@
 --   MyDB:ResetSection({ "TransmogFrame" })
 --   MyDB:ResetValue({ "TransmogFrame", "SetFrameModels" })
 
----@class DatabaseAPI
----@field Init fun(self: DatabaseAPI): table
----@field Get fun(self: DatabaseAPI): table
----@field ResetAll fun(self: DatabaseAPI): table
----@field ResetValue fun(self: DatabaseAPI, path: string[]): any
----@field ResetSection fun(self: DatabaseAPI, path: string[]): table
+---@class LibRu.DatabaseAPI
+---@field Init fun(self: LibRu.DatabaseAPI): table
+---@field Get fun(self: LibRu.DatabaseAPI): table
+---@field ResetAll fun(self: LibRu.DatabaseAPI): table
+---@field ResetValue fun(self: LibRu.DatabaseAPI, path: string[]): any
+---@field ResetSection fun(self: LibRu.DatabaseAPI, path: string[]): table
 
 local function copyDefaults(dst, src)
     for k, v in pairs(src) do
@@ -39,7 +39,7 @@ end
 ---@generic T
 ---@param svName string The name of the SavedVariable
 ---@param defaults T The default values table
----@return T|DatabaseAPI # Returns a table with both the data fields from defaults and the DatabaseAPI methods
+---@return T|LibRu.DatabaseAPI # Returns a table with both the data fields from defaults and the DatabaseAPI methods
 function NewDatabase(svName, defaults)
     local API = {}
     local initialized = false

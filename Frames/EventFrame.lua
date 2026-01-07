@@ -11,7 +11,7 @@ if LibRu.ShouldLoad == false then return end
 
 --- EventFrame class for managing event handlers and scripts on a frame
 --- Handles WoW game events (auto-fired by game) and scripts (frame scripts + custom callbacks)
---- @class EventFrame : Frame
+--- @class LibRu.Frames.EventFrame
 --- @field private _eventHandlers table<string, {callback: function, handle: number, removed: boolean}[]>
 --- @field private _scriptHandlers table<string, {callback: function, handle: number, removed: boolean}[]>
 --- @field private _nextEventHandle number
@@ -19,7 +19,7 @@ if LibRu.ShouldLoad == false then return end
 local EventFrame = {}
 
 --- Creates a new EventFrame by converting an existing frame or creating a new one.
---- @return EventFrame The frame with EventFrame functionality mixed in
+--- @return LibRu.Frames.EventFrame The frame with EventFrame functionality mixed in
 function EventFrame.New(frame)
     -- Capture all existing Frame scripts before converting to EventFrame
     local originalScripts = {}
@@ -68,9 +68,8 @@ function EventFrame.New(frame)
         end
     end
     
-    ---@type EventFrame
     local self = frame or CreateFrame("Frame")
-    Mixin(self, EventFrame)
+    self = Mixin(self, EventFrame)
     self._eventHandlers = {}
     self._scriptHandlers = {}
     self._nextEventHandle = 0
@@ -120,7 +119,7 @@ end
 --- Adds an event handler callback to the frame for a WoW game event.
 --- Game events are automatically registered with WoW and fired by the game engine.
 --- For custom callbacks, use AddScript() instead.
---- @generic T : EventFrame
+--- @generic T : LibRu.Frames.EventFrame
 --- @param self T The EventFrame instance.
 --- @param event string The name of the WoW game event to listen for (e.g., "PLAYER_LOGIN", "ADDON_LOADED").
 --- @param callback fun(self: T, handle: number, event: string, ...: any) The function to call when the event is triggered. 
@@ -151,7 +150,7 @@ end
 --- Removes an event handler by handle.
 --- During event dispatch: marks handler for removal (cleaned up after callbacks complete)
 --- Outside dispatch: removes handler immediately
---- @param self EventFrame The EventFrame instance.
+--- @param self LibRu.Frames.EventFrame The EventFrame instance.
 --- @param handle number The unique handle identifying the event handler to remove.
 --- @return boolean Returns true if handler was found, false otherwise.
 function EventFrame:RemoveEvent(handle)
@@ -183,7 +182,7 @@ end
 --- For frame scripts: preserves any existing script behavior and adds the new handler.
 --- For custom callbacks: use FireScript() to manually trigger them.
 --- Multiple handlers can be added for the same script type.
---- @generic T : EventFrame
+--- @generic T : LibRu.Frames.EventFrame
 --- @param self T The EventFrame instance.
 --- @param scriptType string The script type (e.g., "OnShow", "OnHide", "OnUpdate") or custom name (e.g., "BT_TRANSMOG_UPDATED").
 --- @param callback fun(self: T, handle: number, ...: any) The function to call when the script fires.
@@ -263,7 +262,7 @@ end
 --- Manually fires a script to all registered handlers.
 --- Use this to trigger custom callbacks. Do not use for WoW frame scripts (they fire automatically).
 --- Handlers can safely remove themselves during script execution.
---- @param self EventFrame The EventFrame instance.
+--- @param self LibRu.Frames.EventFrame The EventFrame instance.
 --- @param scriptType string The script type or custom callback name to fire.
 --- @vararg any Arguments to pass to the script handlers.
 function EventFrame:FireScript(scriptType, ...)
@@ -297,7 +296,7 @@ function EventFrame:FireScript(scriptType, ...)
 end
 
 --- Removes a script handler by handle.
---- @param self EventFrame The EventFrame instance.
+--- @param self LibRu.Frames.EventFrame The EventFrame instance.
 --- @param handle number The unique handle identifying the script handler to remove.
 --- @return boolean Returns true if handler was found, false otherwise.
 function EventFrame:RemoveScript(handle)

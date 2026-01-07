@@ -1,4 +1,4 @@
----@class LibRu : Library
+---@class LibRu
 local LibRu = _G["LibRu"];
 
 if not LibRu.ShouldLoad then return end;

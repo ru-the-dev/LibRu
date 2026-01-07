@@ -12,7 +12,7 @@ if LibRu.ShouldLoad == false then return end
 -- Initialize the Frames table in LibRu if it doesn't exist
 LibRu.Frames = LibRu.Frames or {}
 
---- @class ResizeButton : EventFrame
+--- @class LibRu.Frames.ResizeButton : LibRu.Frames.EventFrame
 --- @field ResizeFrame Frame  -- Frame to be resized
 --- @field ResizeAnchor string -- Anchor point for resizing
 --- @field Texture Texture  -- Texture for the resize button
@@ -25,16 +25,15 @@ ResizeButton.__index = ResizeButton
 --- @param resizeFrame Frame Frame to resize
 --- @param size? number Size of button (default: 20)
 --- @param resizeAnchor? string Resize Anchor Point (default: "BOTTOMRIGHT")
---- @return ResizeButton resizeButton The created resize button
+--- @return LibRu.Frames.ResizeButton resizeButton The created resize button
 function ResizeButton.New(parent, resizeFrame, size, resizeAnchor)
     resizeFrame:SetResizable(true)
     resizeFrame:EnableMouse(true)
     
     -- Create the button frame as an EventFrame
-    ---@type ResizeButton
     local button = LibRu.Frames.EventFrame.New(CreateFrame("Button", nil, parent))
     
-    Mixin(button, ResizeButton) -- Mix in the ResizeButton methods
+    button = Mixin(button, ResizeButton) -- Mix in the ResizeButton methods
     
     -- Store properties
     button.ResizeFrame = resizeFrame

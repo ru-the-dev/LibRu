@@ -1,4 +1,4 @@
----@class LibRu : Library
+---@class LibRu
 local LibRu = _G["LibRu"];
 
 -- Ensure LibRu is loaded before proceeding

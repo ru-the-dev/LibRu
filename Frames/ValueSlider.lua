@@ -1,4 +1,4 @@
----@class LibRu : Library
+---@class LibRu
 local LibRu = _G["LibRu"];
 
 -- Ensure LibRu is loaded before proceeding
@@ -12,10 +12,12 @@ if LibRu.ShouldLoad == false then return end
 -- Initialize the Frames table in LibRu if it doesn't exist
 LibRu.Frames = LibRu.Frames or {}
 
---- @class ValueSlider
+--- @class LibRu.Frames.ValueSlider
 --- @field _bindTable table  -- Table to bind the slider value
 --- @field _bindKey string   -- Key in the bindTable for the slider value
 --- @field _min number       -- Minimum value of the slider
+--- @field _format fun(v:number):string|nil       -- Function to format the slider value
+--- @field _valueText FontString -- FontString to display the current value
 local ValueSlider = {}
 ValueSlider.__index = ValueSlider
 
@@ -36,10 +38,9 @@ end
 --- @param formatValue fun(v:number):string|nil -- Optional function to format the slider value
 function ValueSlider.New(parent, name, labelText, min, max, step, bindTable, bindKey, formatValue)
     -- Create a new slider frame
-    ---@class ValueSlider
     local slider = LibRu.Frames.EventFrame.New(CreateFrame("Slider", name, parent, "OptionsSliderTemplate"))
     
-    Mixin(slider, ValueSlider) -- Mix in the Slider methods
+    slider = Mixin(slider, ValueSlider) -- Mix in the Slider methods
 
     -- Set properties for the slider
     slider._bindTable = bindTable
