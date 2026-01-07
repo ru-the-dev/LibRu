@@ -11,7 +11,7 @@ if LibRu.ShouldLoad == false then return end
 
 --- EventFrame class for managing event handlers and scripts on a frame
 --- Handles WoW game events (auto-fired by game) and scripts (frame scripts + custom callbacks)
---- @class LibRu.Frames.EventFrame
+--- @class LibRu.Frames.EventFrame : Frame
 --- @field private _eventHandlers table<string, {callback: function, handle: number, removed: boolean}[]>
 --- @field private _scriptHandlers table<string, {callback: function, handle: number, removed: boolean}[]>
 --- @field private _nextEventHandle number
