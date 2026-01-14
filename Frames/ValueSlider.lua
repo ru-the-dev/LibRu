@@ -35,7 +35,7 @@ end
 --- @param step number         -- Step value for the slider
 --- @param bindTable table     -- Table to bind the slider value
 --- @param bindKey string      -- Key in the bindTable for the slider value
---- @param formatValue fun(v:number):string|nil -- Optional function to format the slider value
+--- @param formatValue? fun(v:number):string -- Optional function to format the slider value
 function ValueSlider.New(parent, name, labelText, min, max, step, bindTable, bindKey, formatValue)
     -- Create a new slider frame
     local slider = LibRu.Frames.EventFrame.New(CreateFrame("Slider", name, parent, "OptionsSliderTemplate"))
@@ -46,7 +46,7 @@ function ValueSlider.New(parent, name, labelText, min, max, step, bindTable, bin
     slider._bindTable = bindTable
     slider._bindKey   = bindKey
     slider._min       = min
-    slider._format    = formatValue
+    slider._format    = formatValue or function() return nil end
 
     -- Configure slider dimensions and values
     slider:SetWidth(300)
