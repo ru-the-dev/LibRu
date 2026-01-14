@@ -1,17 +1,19 @@
--- Factory:
---   local MyDB = NewDatabase("SavedVariableName", DefaultsTable)
---   MyDB:Init()  -- once on ADDON_LOADED
---   MyDB:Get()
---   MyDB:ResetAll()
---   MyDB:ResetSection({ "TransmogFrame" })
---   MyDB:ResetValue({ "TransmogFrame", "SetFrameModels" })
+---@class LibRu
+local LibRu = _G["LibRu"]
 
----@class LibRu.DatabaseAPI
----@field Init fun(self: LibRu.DatabaseAPI): table
----@field Get fun(self: LibRu.DatabaseAPI): table
----@field ResetAll fun(self: LibRu.DatabaseAPI): table
----@field ResetValue fun(self: LibRu.DatabaseAPI, path: string[]): any
----@field ResetSection fun(self: LibRu.DatabaseAPI, path: string[]): table
+-- Ensure LibRu is loaded before proceeding
+if not LibRu then
+    error("LibRu is required to initialize EventFrame")
+end
+
+-- Early exit if LibRu.ShouldLoad is false
+if LibRu.ShouldLoad == false then return end
+
+LibRu.Utils = LibRu.Utils or {};
+
+
+local DB_Utils = {};
+LibRu.Utils.DB = DB_Utils;
 
 local function copyDefaults(dst, src)
     for k, v in pairs(src) do
@@ -34,13 +36,30 @@ local function walkToParent(root, path)
     return node, path[#path]
 end
 
+
+
+-- Factory:
+--   local MyDB = NewDatabase("SavedVariableName", DefaultsTable)
+--   MyDB:Init()  -- once on ADDON_LOADED
+--   MyDB:Get()
+--   MyDB:ResetAll()
+--   MyDB:ResetSection({ "TransmogFrame" })
+--   MyDB:ResetValue({ "TransmogFrame", "SetFrameModels" })
+
+---@class LibRu.DatabaseAPI
+---@field Init fun(self: LibRu.DatabaseAPI): table
+---@field Get fun(self: LibRu.DatabaseAPI): table
+---@field ResetAll fun(self: LibRu.DatabaseAPI): table
+---@field ResetValue fun(self: LibRu.DatabaseAPI, path: string[]): any
+---@field ResetSection fun(self: LibRu.DatabaseAPI, path: string[]): table
+
 ---Creates a new database with default values and API methods.
 ---The returned object will have both the data structure from defaults and the API methods.
 ---@generic T
 ---@param svName string The name of the SavedVariable
 ---@param defaults T The default values table
 ---@return T|LibRu.DatabaseAPI # Returns a table with both the data fields from defaults and the DatabaseAPI methods
-function NewDatabase(svName, defaults)
+function DB_Utils.CreateDatabase(svName, defaults)
     local API = {}
     local initialized = false
 

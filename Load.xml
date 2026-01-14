@@ -8,8 +8,9 @@
     <Script file="RegisterLibs.lua"/>
     <Script file="LibRu.lua"/>
 
-    <!-- Database Utility-->
-    <Script file="DBFactory.lua"/>
+    <!-- Utility-->
+    <Script file="Utils/Database/DB_Factory.lua"/>
+    <Script file="Utils/Frame.lua"/>
 
     <!-- Frames -->
     <Script file="Frames/EventFrame.lua"/>
