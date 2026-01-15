@@ -7,6 +7,7 @@
     <!-- Load order is important.-->
     <Script file="RegisterLibs.lua"/>
     <Script file="LibRu.lua"/>
+    <Script file="Module.lua"/>
 
     <!-- Utility-->
     <Script file="Utils/Database/DB_Factory.lua"/>
