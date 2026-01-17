@@ -11,6 +11,7 @@ if LibRu.ShouldLoad == false then return end
 
 
 --- @class LibRu.Frames.CollapseExtendCheckButton
+--- @field Inverted boolean Wether or not the initial texture is inverted or not
 local CollapseExtendCheckButton = {}
 
 LibRu.Frames = LibRu.Frames or {}
@@ -23,11 +24,13 @@ LibRu.Frames.CollapseExtendCheckButton = CollapseExtendCheckButton
 ---@param atlas string The atlas name for textures
 ---@param size number The size of the button
 ---@param invert? boolean Whether to invert the flip behavior (checked normal, unchecked flipped; default: false)
----@return CheckButton|LibRu.Frames.EventFrame The created button
+---@return LibRu.Frames.CollapseExtendCheckButton|CheckButton|LibRu.Frames.EventFrame The created button
 function CollapseExtendCheckButton.New(parent, name, atlas, size, invert)
     local button = CreateFrame("CheckButton", name, parent)
     button = LibRu.Frames.EventFrame.New(button);
-
+    
+    button = Mixin(button, CollapseExtendCheckButton)
+    
     button:SetSize(size, size)
     
     -- Set atlas textures
@@ -36,13 +39,13 @@ function CollapseExtendCheckButton.New(parent, name, atlas, size, invert)
     button:SetHighlightAtlas(atlas, "ADD")
     
     -- Store invert flip state
-    button.invert = invert or false
+    button.Inverted = invert or false
 
     -- initial sync 
     button:SyncTextures();
     
     -- Flip the textures when checked (or invert if specified)
-    button:AddScript("OnUpdate", function(self, _)
+    button:AddScript("OnClick", function(self, _)
         button:SyncTextures();
     end)
         
