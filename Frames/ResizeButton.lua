@@ -25,7 +25,6 @@ ResizeButton.__index = ResizeButton
 --- @param resizeFrame Frame Frame to resize
 --- @param size? number Size of button (default: 20)
 --- @param resizeAnchor? string Resize Anchor Point (default: "BOTTOMRIGHT")
---- @return LibRu.Frames.ResizeButton resizeButton The created resize button
 function ResizeButton.New(parent, resizeFrame, size, resizeAnchor)
     resizeFrame:SetResizable(true)
     resizeFrame:EnableMouse(true)
