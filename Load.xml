@@ -10,7 +10,7 @@
 
     <!-- Utility-->
     <Script file="Utils/Database/DB_Factory.lua"/>
-    <Script file="Utils/Database/DB_Factory.lua"/>
+    <Script file="Utils/Database/Frame.lua"/>
 
     <!-- Frames -->
     <Script file="Frames/EventFrame.lua"/>
