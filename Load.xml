@@ -6,12 +6,11 @@
 
     <!-- Load order is important.-->
     <Script file="RegisterLibs.lua"/>
-    <Script file="LibRu.lua"/>
     <Script file="Module.lua"/>
 
     <!-- Utility-->
     <Script file="Utils/Database/DB_Factory.lua"/>
-    <Script file="Utils/Frame.lua"/>
+    <Script file="Utils/Database/DB_Factory.lua"/>
 
     <!-- Frames -->
     <Script file="Frames/EventFrame.lua"/>
