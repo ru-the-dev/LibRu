@@ -26,6 +26,7 @@ function FrameUtils.MakeDraggable(dragFrame, targetFrame, clampToScreen)
     -- make xmog frame movable
     targetFrame:SetMovable(true);
     targetFrame:SetClampedToScreen(clampToScreen or true)
+    dragFrame:SetMouseClickEnabled(true)
     dragFrame:RegisterForDrag("LeftButton")
 
     local addScriptFunc = dragFrame.AddScript or dragFrame.SetScript;
