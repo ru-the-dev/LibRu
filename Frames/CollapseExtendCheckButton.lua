@@ -16,13 +16,15 @@ local CollapseExtendCheckButton = {}
 LibRu.Frames = LibRu.Frames or {}
 LibRu.Frames.CollapseExtendCheckButton = CollapseExtendCheckButton
 
+
 --- Creates a new FlippingCheckButton
 ---@param parent Frame The parent frame
 ---@param name string The name of the button
 ---@param atlas string The atlas name for textures
 ---@param size number The size of the button
+---@param invert? boolean Whether to invert the flip behavior (checked normal, unchecked flipped; default: false)
 ---@return CheckButton|LibRu.Frames.EventFrame The created button
-function CollapseExtendCheckButton.New(parent, name, atlas, size)
+function CollapseExtendCheckButton.New(parent, name, atlas, size, invert)
     local button = CreateFrame("CheckButton", name, parent)
     button = LibRu.Frames.EventFrame.New(button);
 
@@ -33,28 +35,43 @@ function CollapseExtendCheckButton.New(parent, name, atlas, size)
     button:SetPushedAtlas(atlas)
     button:SetHighlightAtlas(atlas, "ADD")
     
-    -- Flip the textures when checked
+    -- Store invert flip state
+    button.invert = invert or false
+
+    -- initial sync 
+    button:SyncTextures();
+    
+    -- Flip the textures when checked (or invert if specified)
     button:AddScript("OnUpdate", function(self, _)
-        local isChecked = self:GetChecked();
-
-        local textures = {
-            self:GetNormalTexture(),
-            self:GetPushedTexture(),
-            self:GetHighlightTexture()
-        }
-
-        if isChecked then
-            -- flip textures
-            for _, texture in ipairs(textures) do
-                if texture then texture:SetTexCoord(1, 0, 0, 1) end 
-            end
-        else
-            for _, texture in ipairs(textures) do
-                if texture then texture:SetTexCoord(0, 1, 1, 0) end
-            end
-        end
+        button:SyncTextures();
     end)
         
-    
     return button
+end
+
+function CollapseExtendCheckButton:SyncTextures()
+    local isChecked = self:GetChecked();
+
+    local textures = {
+        self:GetNormalTexture(),
+        self:GetPushedTexture(),
+        self:GetHighlightTexture()
+    }
+
+    local shouldFlip = isChecked
+    if self.invertFlip then
+        shouldFlip = not shouldFlip
+    end
+
+    if shouldFlip then
+        -- flip textures horizontally
+        for _, texture in ipairs(textures) do
+            if texture then texture:SetTexCoord(1, 0, 0, 1) end 
+        end
+    else
+        -- normal
+        for _, texture in ipairs(textures) do
+            if texture then texture:SetTexCoord(0, 1, 0, 1) end 
+        end
+    end
 end
