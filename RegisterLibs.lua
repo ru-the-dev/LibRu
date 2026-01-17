@@ -4,4 +4,4 @@ if _G.LibManager == nil then
 end
 
 ---@class LibRu
-local LibRu = _G.LibManager.NewLibrary("LibRu", 1, 2);
+local LibRu = _G.LibManager.NewLibrary("LibRu", 1, 3);
