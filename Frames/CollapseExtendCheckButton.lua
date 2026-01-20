@@ -10,7 +10,7 @@ end
 if LibRu.ShouldLoad == false then return end
 
 
---- @class LibRu.Frames.CollapseExtendCheckButton
+--- @class LibRu.Frames.CollapseExtendCheckButton : CheckButton
 --- @field Inverted boolean Wether or not the initial texture is inverted or not
 local CollapseExtendCheckButton = {}
 
@@ -24,7 +24,7 @@ LibRu.Frames.CollapseExtendCheckButton = CollapseExtendCheckButton
 ---@param atlas string The atlas name for textures
 ---@param size number The size of the button
 ---@param invert? boolean Whether to invert the flip behavior (checked normal, unchecked flipped; default: false)
----@return LibRu.Frames.CollapseExtendCheckButton|CheckButton|LibRu.Frames.EventFrame The created button
+---@return LibRu.Frames.CollapseExtendCheckButton|LibRu.Frames.EventFrame The created button
 function CollapseExtendCheckButton.New(parent, name, atlas, size, invert)
     local button = CreateFrame("CheckButton", name, parent)
     button = LibRu.Frames.EventFrame.New(button);
@@ -62,7 +62,7 @@ function CollapseExtendCheckButton:SyncTextures()
     }
 
     local shouldFlip = isChecked
-    if self.invertFlip then
+    if self.Inverted then
         shouldFlip = not shouldFlip
     end
 
@@ -77,4 +77,18 @@ function CollapseExtendCheckButton:SyncTextures()
             if texture then texture:SetTexCoord(0, 1, 0, 1) end 
         end
     end
+end
+
+function CollapseExtendCheckButton:Toggle()
+    self:Click();
+end
+
+--- Set the collapsed state explicitly.
+--- @param collapsed boolean
+function CollapseExtendCheckButton:SetCollapsed(collapsed)
+    
+    -- dont do anything if the state is already correct
+    if (self:GetChecked() == collapsed) then return end;
+
+    self:Toggle();
 end
