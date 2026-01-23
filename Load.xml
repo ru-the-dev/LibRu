@@ -6,6 +6,9 @@
 
     <!-- Load order is important.-->
     <Script file="RegisterLibs.lua"/>
+    
+    <Script file="DebugColors.lua"/>
+    <Script file="SlashCommands.lua"/>
     <Script file="Module.lua"/>
 
     <!-- Utility-->

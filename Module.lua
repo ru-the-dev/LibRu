@@ -9,39 +9,49 @@ end
 -- Early exit if LibRu.ShouldLoad is false
 if LibRu.ShouldLoad == false then return end
 
--- Debug color queue (hex RRGGBB strings). Modules will be assigned colors round-robin.
-LibRu.DebugColors = LibRu.DebugColors or {
-    "ffd166", -- warm yellow
-    "06d6a0", -- teal
-    "118ab2", -- blue
-    "073b4c", -- dark teal
-    "ef476f", -- pink/red
-    "8a2be2", -- purple
-    "00ff7f", -- spring green
-}
-LibRu._nextDebugColorIndex = LibRu._nextDebugColorIndex or 1
-
 
 ---@class LibRu.Module
----@field DebugFunc? fun(string) Optional debug function for logging
 ---@field Name string Name of the module
 ---@field Enabled boolean Whether the module is enabled
 ---@field Settings table Settings table for the module
-local Module = {
-    DebugFunc = nil
-}
+---@field Commands table<string, function|table<string,function>> Table of slash commands and their handlers or subcommand tables
+---@field Dependencies LibRu.Module[] List of modules this module depends on
+local Module = {}
+
 Module.__index = Module
 
 
 ---@param name string Name of the module
+---@param parentModule? LibRu.Module Optional parent module
+---@param dependencies? LibRu.Module[] Optional list of dependencies
+---@param debug? boolean should debugging be enabled for this module
 ---@return LibRu.Module
-function Module.New(name)
+function Module.New(name, parentModule, dependencies, debug)
+    -- Validate dependencies exist at creation time
+    dependencies = dependencies or {}
+    for i, dep in ipairs(dependencies) do
+        if not dep then
+            error(string.format("Module '%s': dependency at index %d is nil", name, i))
+        end
+    end
+
     ---@class LibRu.Module
     local t = setmetatable({
         Name = name,
+        Debug = debug or parentModule and parentModule.Debug or false,
         Enabled = true,
-        Settings = {}
+        Settings = {},
+        Commands = {},
+        Dependencies = dependencies,
+        Initialized = false,
+        ParentModule = parentModule or nil,
+        Modules = {}
     }, Module)
+
+    -- Register this module as a submodule of its parent, if applicable
+    if parentModule then
+        parentModule.Modules[name] = t
+    end
 
     -- Assign a rotating debug color to this module
     local colorHex = LibRu.DebugColors[LibRu._nextDebugColorIndex] or "ffffff"
@@ -53,14 +63,26 @@ function Module.New(name)
     return t
 end
 
-function Module:DebugLog(message)
-    if self.DebugFunc then
-        local name = tostring(self.Name)
+---@param colored? boolean Whether to return colored names (defaults to false)
+function Module:GetFullName(colored)
+    local parts = {}
+    local current = self
+    while current do
+        local name = tostring(current.Name)
         local coloredName = name
-        if self.DebugColorHex then
-            coloredName = (self.DebugColorPrefix or "|cffFFFFFF") .. name .. (self.DebugColorSuffix or "|r")
+        if colored and current.DebugColorHex then
+            coloredName = (current.DebugColorPrefix or "|cffFFFFFF") .. name .. (current.DebugColorSuffix or "|r")
         end
-        self.DebugFunc("Module [" .. coloredName .. "]: " .. tostring(message))
+        table.insert(parts, 1, coloredName)  -- Insert at beginning to build from root to leaf
+        current = current.ParentModule
+    end
+    return table.concat(parts, ".")
+end
+
+function Module:DebugLog(message)
+    if self.Debug then
+        local coloredFullName = self:GetFullName(true)
+        print("Module [" .. coloredFullName .. "]: " .. tostring(message))
     end
 end
 
@@ -70,9 +92,38 @@ end
 function Module:OnInitialize() end
 
 function Module:Initialize()
-    self:DebugLog("Initializing module.");
+    if self.Initialized then return end
+
+    self:DebugLog("Initializing module.")
+
+    -- Initialize dependencies first
+    for _, dependency in ipairs(self.Dependencies) do
+        if not dependency.Initialized then
+            dependency:Initialize()
+        end
+    end
 
     self:OnInitialize()
+
+    self.Initialized = true
+    
+    -- Register slash commands defined in this module
+    for command, handler in pairs(self.Commands) do
+        self:RegisterSlashCommand(command, handler)
+    end
+    
+    --- initialize submodules
+    for _, subModule in pairs(self.Modules) do
+        subModule:Initialize()
+    end
+
+    
+end
+
+---@param command string The slash command (e.g., "/mymodule")
+---@param handler function|table<string,function> The handler function or table of subcommand handlers
+function Module:RegisterSlashCommand(command, handler)
+    LibRu.RegisterSlashCommand(command, handler)
 end
 
 LibRu.Module = Module
