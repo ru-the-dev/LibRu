@@ -43,4 +43,23 @@ function FrameUtils.MakeDraggable(dragFrame, targetFrame, clampToScreen)
     end)
 end
 
+--- Retrieves a frame by its nested path
+--- @param frame Frame The root frame to start the search from
+--- @param path? string The dot-separated path to the target frame (e.g., "ChildFrame.SubFrame.TargetFrame")
+--- @return Frame|nil The target frame if found, or nil if any part of the path is invalid
+function FrameUtils.GetFrameByPath(frame, path)
+    if not path or path == "" then
+        return frame;
+    end
+
+    local currentFrame = frame;
+    for segment in string.gmatch(path, "[^%.]+") do
+        currentFrame = currentFrame[segment];
+        if not currentFrame then
+            return nil;
+        end
+    end
+    
+    return currentFrame;
+end
 

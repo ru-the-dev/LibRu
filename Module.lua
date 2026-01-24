@@ -126,4 +126,27 @@ function Module:RegisterSlashCommand(command, handler)
     LibRu.RegisterSlashCommand(command, handler)
 end
 
+--- Safely gets a nested submodule by dot-separated path, returning nil if any level is missing.
+--- @param path? string The dot-separated path to the module (e.g., "WardrobeCollection.CollectionLayout").
+--- @return LibRu.Module|nil The nested module, or nil if not found.
+function Module:GetModule(path)
+    
+    if path == nil then return self end
+
+    if type(path) ~= "string" then
+        error("GetModule path must be a string or nil.")
+    end
+
+    local keys = {}
+    for key in string.gmatch(path, "[^%.]+") do
+        table.insert(keys, key)
+    end
+    local current = self
+    for _, key in ipairs(keys) do
+        if not current or not current.Modules then return nil end
+        current = current.Modules[key]
+    end
+    return current
+end
+
 LibRu.Module = Module
