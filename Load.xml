@@ -1,0 +1,14 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+    <Script file="LibStub.lua"/>
+    <Script file="Core.lua"/>
+    <Script file="DebugColors.lua"/>
+    <Script file="SlashCommands.lua"/>
+    <Script file="Module.lua"/>
+    <Script file="Utils/Database/DB_Factory.lua"/>
+    <Script file="Utils/Frame.lua"/>
+    <Script file="Frames/EventFrame.lua"/>
+    <Script file="Frames/ResizeButton.lua"/>
+    <Script file="Frames/CollapseExtendCheckButton.lua"/>
+    <Script file="Frames/ValueSlider.lua"/>
+</Ui>
