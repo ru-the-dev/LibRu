@@ -13,21 +13,25 @@ A lightweight library framework for World of Warcraft addons.
 
 ## Installation
 
-LibRu is distributed as a **separate addon** that will be **automatically downloaded** when other addons declare it as a dependency.
+LibRu is designed as an **embedded library** that can be integrated directly into your World of Warcraft addon.
+
+### Using as Git Submodule
+
+To add LibRu as a Git submodule in your addon's `Libs` directory:
+
+```bash
+git submodule add https://github.com/ru-the-dev/LibRu Libs/LibRu
+```
+
+### Manual Integration
+
+1. Download or clone LibRu from the repository
+2. Copy the `LibRu` folder into your addon's directory (typically `Libs/LibRu`)
+3. Include the necessary files in your addon's `.toc` file
 
 ### For Addon Developers
 
-To use LibRu in your addon:
-
-1. Add `## Dependencies: LibRu` to your addon's `.toc` file
-2. CurseForge/Overwolf will automatically download LibRu when users install your addon
-3. Use LibRu in your code as shown below
-
-### Manual Installation
-
-If you need to install manually:
-1. Download LibRu from CurseForge/Overwolf
-2. Place the `LibRu` folder in your `Interface/AddOns/` directory
+To use LibRu in your addon code, reference it as an embedded library within your namespace.
 
 
 ## Architecture
