@@ -1,12 +1,8 @@
----@class LibRu : Library
-local LibRu = _G["LibRu"];
+local addon, ns = ...
+if ns.LibRu == nil then return end
 
--- Ensure LibRu is loaded before proceeding
-if not LibRu then
-    error("LibRu is required to initialize ResizeButton. Please ensure LibRu is loaded before ResizeButton.lua")
-end
-
--- LibStub handles version checking, so no need for ShouldLoad check
+---@class LibRu
+local LibRu = ns.LibRu;
 
 -- Initialize the Frames table in LibRu if it doesn't exist
 LibRu.Frames = LibRu.Frames or {}

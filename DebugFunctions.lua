@@ -1,15 +1,11 @@
+local addon, ns = ...
+if ns.LibRu == nil then return end
+
 ---@class LibRu
-local LibRu = _G["LibRu"];
-
--- Ensure LibRu is loaded before proceeding
-if not LibRu then
-    error("LibRu is required to initialize EventDispatcher. Please ensure LibRu is loaded before EventDispatcher.lua")
-end
-
--- LibStub handles version checking, so no need for ShouldLoad check
-
+local LibRu = ns.LibRu;
 
 local DebugFunctions = {};
+LibRu.Debug = DebugFunctions;
 
 function DebugFunctions.GetTableAttributeDisplayWidth()
     if TableAttributeDisplay then
@@ -127,4 +123,3 @@ function DebugFunctions.TableToString(t, indent, seen)
 end
 
 
-LibRu.Debug = DebugFunctions;

@@ -1,12 +1,10 @@
+local addon, ns = ...
+if ns.LibRu == nil then return end
+
 ---@class LibRu
-local LibRu = _G["LibRu"]
+local LibRu = ns.LibRu
 
--- Ensure LibRu is loaded before proceeding
-if not LibRu then
-    error("LibRu is required to initialize SlashCommands")
-end
 
--- LibStub handles version checking, so no need for ShouldLoad check
 
 ---@param command string The slash command to register
 ---@param handler function|table<string,function> The handler function or table of subcommand handlers

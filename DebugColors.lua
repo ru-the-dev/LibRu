@@ -1,12 +1,8 @@
+local addon, ns = ...
+if ns.LibRu == nil then return end
+
 ---@class LibRu
-local LibRu = _G["LibRu"]
-
--- Ensure LibRu is loaded before proceeding
-if not LibRu then
-    error("LibRu is required to initialize Debug")
-end
-
--- LibStub handles version checking, so no need for ShouldLoad check
+local LibRu = ns.LibRu
 
 -- Debug color queue (hex RRGGBB strings). Modules will be assigned colors round-robin.
 LibRu.DebugColors = LibRu.DebugColors or {

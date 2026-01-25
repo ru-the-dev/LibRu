@@ -13,34 +13,30 @@ A lightweight library framework for World of Warcraft addons.
 
 ## Installation
 
-1. Place the LibRu folder in your `Interface/AddOns/` directory
-2. Add `## Dependencies: LibRu` to your addon's .toc file
+LibRu is distributed as a **separate addon** that will be **automatically downloaded** when other addons declare it as a dependency.
 
-The library will automatically register itself using LibStub when loaded.
+### For Addon Developers
 
-## Usage
+To use LibRu in your addon:
 
-```lua
--- In your addon
-local LibRu = _G.LibRu
+1. Add `## Dependencies: LibRu` to your addon's `.toc` file
+2. CurseForge/Overwolf will automatically download LibRu when users install your addon
+3. Use LibRu in your code as shown below
 
--- Create a module
-local MyModule = LibRu.Module.New("MyModule", parentModule, dependencies, debug)
+### Manual Installation
 
--- Use UI components
-local button = LibRu.Frames.ResizeButton.New(parentFrame)
+If you need to install manually:
+1. Download LibRu from CurseForge/Overwolf
+2. Place the `LibRu` folder in your `Interface/AddOns/` directory
 
--- Register slash commands
-LibRu.RegisterSlashCommand("/mymod", handler)
-```
 
-## Version
+## Architecture
 
-Current version: 1.6.0
+LibRu uses a **namespace-based architecture** designed for embedded use within addons. It provides a complete framework for building modular WoW addons with consistent UI components, event handling, and debugging tools.
 
-## Dependencies
+## LibStub
 
-- LibStub (included with World of Warcraft)
+LibRu includes an embedded copy of LibStub for reliable operation. LibStub is a stable, public domain library that hasn't changed significantly in over a decade. While submodules are ideal for actively maintained dependencies, LibStub's stability makes embedding the appropriate choice.
 
 ## Author
 
