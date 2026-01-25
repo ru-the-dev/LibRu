@@ -6,8 +6,7 @@ if not LibRu then
     error("LibRu is required to initialize EventFrame")
 end
 
--- Early exit if LibRu.ShouldLoad is false
-if LibRu.ShouldLoad == false then return end
+-- LibStub handles version checking, so no need for ShouldLoad check
 
 
 --- @class LibRu.Frames.CollapseExtendCheckButton : CheckButton

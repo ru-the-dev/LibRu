@@ -6,8 +6,7 @@ if not LibRu then
     error("LibRu is required to initialize EventDispatcher. Please ensure LibRu is loaded before EventDispatcher.lua")
 end
 
--- Early exit if LibRu.ShouldLoad is false
-if LibRu.ShouldLoad == false then return end
+-- LibStub handles version checking, so no need for ShouldLoad check
 
 -- Initialize the Frames table in LibRu if it doesn't exist
 LibRu.Frames = LibRu.Frames or {}

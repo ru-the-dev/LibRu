@@ -6,8 +6,7 @@ if not LibRu then
     error("LibRu is required to initialize EventFrame")
 end
 
--- Early exit if LibRu.ShouldLoad is false
-if LibRu.ShouldLoad == false then return end
+-- LibStub handles version checking, so no need for ShouldLoad check
 
 --- EventFrame class for managing event handlers and scripts on a frame
 --- Handles WoW game events (auto-fired by game) and scripts (frame scripts + custom callbacks)

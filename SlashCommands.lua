@@ -6,8 +6,7 @@ if not LibRu then
     error("LibRu is required to initialize SlashCommands")
 end
 
--- Early exit if LibRu.ShouldLoad is false
-if LibRu.ShouldLoad == false then return end
+-- LibStub handles version checking, so no need for ShouldLoad check
 
 ---@param command string The slash command to register
 ---@param handler function|table<string,function> The handler function or table of subcommand handlers

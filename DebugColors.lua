@@ -6,8 +6,7 @@ if not LibRu then
     error("LibRu is required to initialize Debug")
 end
 
--- Early exit if LibRu.ShouldLoad is false
-if LibRu.ShouldLoad == false then return end
+-- LibStub handles version checking, so no need for ShouldLoad check
 
 -- Debug color queue (hex RRGGBB strings). Modules will be assigned colors round-robin.
 LibRu.DebugColors = LibRu.DebugColors or {

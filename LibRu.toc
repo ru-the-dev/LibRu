@@ -1,0 +1,23 @@
+## Interface: 120000, 120001
+## Title: LibRu
+## Version: 1.6.0
+## Author: ru_the_dev (Pookie)
+## Notes: Lightweight library framework for WoW addons
+## DefaultState: Enabled
+## LoadOnDemand: 0
+
+Core.lua
+
+DebugColors.lua
+SlashCommands.lua
+Module.lua
+
+Utils/Database/DB_Factory.lua
+Utils/Frame.lua
+
+Frames/EventFrame.lua
+Frames/ResizeButton.lua
+Frames/ValueSlider.lua
+Frames/CollapseExtendCheckButton.lua
+
+DebugFunctions.lua
