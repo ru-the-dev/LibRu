@@ -1,0 +1,154 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+                        https://raw.githubusercontent.com/Gethe/wow-ui-source/live/Interface/AddOns/Blizzard_SharedXML/UI.xsd">
+
+    <Frame name="LibRu_ChangeLogFrameTemplate" mixin="LibRu_ChangeLogFrameMixin" inherits="PortraitFrameTemplate" parent="UIParent" toplevel="true" enableMouse="true" hidden="true" virtual="true">
+        <Size x="800" y="500"/>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <KeyValues>
+            <KeyValue key="frameStrata" value="DIALOG" type="string"/>
+            <KeyValue key="resizable" value="true" type="boolean"/>
+        </KeyValues>
+        <ResizeBounds>
+            <minResize x="600" y="400"/>
+        </ResizeBounds>
+        <Frames>
+            <!-- Left frame for version select -->
+            <Frame name="LeftFrame" parentKey="LeftFrame" inherits="LibRu_ChangeLogInsetFrameTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="20" y="-80" />
+                    <Anchor point="BOTTOMLEFT" x="20" y="20" />
+                </Anchors>
+
+                <Frames>
+                    <!-- ScrollBox -->
+                    <ScrollFrame parentKey="ScrollFrame" inherits="ScrollFrameTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" x="4" y="-5" />
+                            <Anchor point="BOTTOMRIGHT" x="-4" y="5" />
+                        </Anchors>
+                        <ScrollChild>
+                            <Frame name="ScrollChild" parentKey="ScrollChild" mixin="LibRu_ChangeLogElementMixin">
+                                <Size x="1" y="1"/> <!-- gets updated by mixin-->
+                            </Frame>
+                        </ScrollChild>
+                    </ScrollFrame>
+
+                    
+                </Frames>
+            </Frame>
+            <!-- Right frame for content -->
+            <Frame name="RightFrame" parentKey="RightFrame" inherits="LibRu_ChangeLogInsetFrameTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.LeftFrame" relativePoint="TOPRIGHT" x="15" y="0"/>
+                    <Anchor point="BOTTOMRIGHT" x="-40" y="20"/>
+                </Anchors>
+                <Frames>
+                    <ScrollFrame name="ScrollFrame" parentKey="ScrollFrame" inherits="ScrollFrameTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" x="4" y="-4"/>
+                            <Anchor point="BOTTOMRIGHT" x="-25" y="4"/>
+                        </Anchors>
+                        <ScrollChild>
+                            <Frame name="ScrollChild" parentKey="ScrollChild" mixin="LibRu_ChangeLogElementMixin">
+                                <Size x="1" y="1"/> <!-- gets updated by mixin-->
+                            </Frame>
+                        </ScrollChild>
+                    </ScrollFrame>
+                </Frames>
+            </Frame>
+        </Frames>
+    </Frame>
+
+    <Frame name="LibRu_ChangeLogVersionTemplate" mixin="LibRu_ChangeLogElementMixin" virtual="true">
+        <Size x="200" y="20"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="text" font="GameFontNormal" justifyH="LEFT" wordwrap="true">
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="underline">
+                    <Color r="1" g="0.8" b="0" a="1"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeKey="$parent.text" relativePoint="BOTTOMLEFT" y="-2"/>
+                    </Anchors>
+                    <Size y="2"/>
+                </Texture>
+            </Layer>
+        </Layers>
+    </Frame>
+
+    <Frame name="LibRu_ChangeLogHeadingTemplate" mixin="LibRu_ChangeLogElementMixin" virtual="true">
+        <Size x="200" y="20"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="text" font="GameFontNormal" justifyH="LEFT" wordwrap="true">
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+
+    <Frame name="LibRu_ChangeLogTextTemplate" mixin="LibRu_ChangeLogElementMixin" virtual="true">
+        <Size x="200" y="20"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="text" font="GameFontNormal" justifyH="LEFT" wordwrap="true">
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+
+    <Frame name="LibRu_ChangeLogImageTemplate" mixin="LibRu_ChangeLogElementMixin" virtual="true">
+        <Size x="200" y="100"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <Texture parentKey="texture">
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+    </Frame>
+
+    <Frame name="LibRu_ChangeLogInsetFrameTemplate" virtual="true">
+        <Size x="150" y="200"/>
+        <KeyValues>
+            <KeyValue key="layoutType" value="InsetFrameTemplate" type="string"/>
+        </KeyValues>
+        <Layers>
+            <Layer level="BACKGROUND" textureSubLevel="-5">
+                <Texture parentKey="Bg" file="Interface/DialogFrame/UI-DialogBox-Background" alpha="0.5" horizTile="true" vertTile="true" setAllPoints="true"/>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Frame parentKey="NineSlice" useParentLevel="true" inherits="NineSlicePanelTemplate"/>  
+        </Frames>
+    </Frame>
+
+    <Button name="LibRu_ChangeLogButtonTemplate" virtual="true">
+        <Size x="130" y="25"/>
+        <NormalTexture file="Interface\Buttons\UI-Listbox-Highlight2" alphaMode="ADD" setAllPoints="true">
+            <Color r="0.831" g="0.733" b="0.133" a="0.2" />
+        </NormalTexture>
+        <HighlightTexture file="Interface\Buttons\UI-Listbox-Highlight" alphaMode="ADD" setAllPoints="true"/>
+        <ButtonText parentKey="text" font="GameFontNormal" justifyH="LEFT">
+            <Anchors>
+                <Anchor point="LEFT" x="5"/>
+            </Anchors>
+        </ButtonText>
+    </Button>
+</Ui>
