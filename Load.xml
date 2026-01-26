@@ -13,5 +13,6 @@
     <Script file="Frames/ResizeButton.lua"/>
     <Script file="Frames/CollapseExtendCheckButton.lua"/>
     <Script file="Frames/ValueSlider.lua"/>
+    <Script file="UrlClicker.lua"/>
     <Include file="ChangeLog/Load.xml"/>
 </Ui>
