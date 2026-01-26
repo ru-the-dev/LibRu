@@ -24,6 +24,9 @@ end
 function ChangeLogElementMixin:UpdateLayout()
     local yOffset = -10  -- Add initial top margin
     for _, child in ipairs(self.children or {}) do
+        if child.elementType == 'heading' then
+            yOffset = yOffset - 10  -- Extra space above headers
+        end
         child:SetPoint("TOPLEFT", child.xOffset, yOffset)
         if child.texture then
             -- Images have fixed size set in SetImage
@@ -68,7 +71,11 @@ function ChangeLogElementMixin:SetContent(text, fontSize, color)
             displayText = "|cff" .. color .. displayText .. "|r"
         end
         self.text:SetText(displayText)
-        self.text:SetFont(STANDARD_TEXT_FONT, fontSize or 12)
+        if self.elementType == 'heading' then
+            self.text:SetFont(STANDARD_TEXT_FONT, fontSize or 12, "OUTLINE")
+        else
+            self.text:SetFont(STANDARD_TEXT_FONT, fontSize or 12)
+        end
         self.text:SetWordWrap(true)
         self:SetHeight(self.text:GetHeight())
     end

@@ -13,6 +13,7 @@ class MarkdownToWoWParser(HTMLParser):
         self.current_text = ""
         self.in_bold = False
         self.in_italic = False
+        self.in_code = False
         self.in_heading = False
         self.heading_level = 0
 
@@ -46,6 +47,8 @@ class MarkdownToWoWParser(HTMLParser):
             self.in_bold = True
         elif tag == 'em' or tag == 'i':
             self.in_italic = True
+        elif tag == 'code':
+            self.in_code = True
         elif tag == 'br':
             self.current_text += '\n'
 
@@ -60,6 +63,8 @@ class MarkdownToWoWParser(HTMLParser):
             self.in_bold = False
         elif tag == 'em' or tag == 'i':
             self.in_italic = False
+        elif tag == 'code':
+            self.in_code = False
 
     def handle_data(self, data):
         if self.in_heading and self.heading_level == 1:
@@ -72,6 +77,8 @@ class MarkdownToWoWParser(HTMLParser):
                 formatted_data = f"|cffffd100{formatted_data}|r"
             if self.in_italic:
                 formatted_data = f"|cff888888{formatted_data}|r"  # dim for italic
+            if self.in_code:
+                formatted_data = f"|cff0080ff{formatted_data}|r"  # darker blue for code
             self.current_text += formatted_data
 
     def flush_text(self):

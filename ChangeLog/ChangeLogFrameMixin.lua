@@ -240,6 +240,7 @@ function ChangeLogFrameMixin:ShowVersion(version)
         end
     end
 
+    scrollChild:SetWidth(scrollFrame:GetWidth())
     scrollChild:UpdateLayout()
 
     if (self.Show) then
