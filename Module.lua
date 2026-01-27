@@ -8,7 +8,6 @@ local LibRu = ns.LibRu
 ---@field Name string Name of the module
 ---@field Enabled boolean Whether the module is enabled
 ---@field Settings table Settings table for the module
----@field Commands table<string, function|table<string,function>> Table of slash commands and their handlers or subcommand tables
 ---@field Dependencies LibRu.Module[] List of modules this module depends on
 local Module = {}
 
@@ -35,7 +34,6 @@ function Module.New(name, parentModule, dependencies, debug)
         Debug = debug or parentModule and parentModule.Debug or false,
         Enabled = true,
         Settings = {},
-        Commands = {},
         Dependencies = dependencies,
         Initialized = false,
         ParentModule = parentModule or nil,
@@ -100,24 +98,13 @@ function Module:Initialize()
     self:OnInitialize()
 
     self.Initialized = true
-    
-    -- Register slash commands defined in this module
-    for command, handler in pairs(self.Commands) do
-        self:RegisterSlashCommand(command, handler)
-    end
-    
+
     --- initialize submodules
     for _, subModule in pairs(self.Modules) do
         subModule:Initialize()
     end
 
     
-end
-
----@param command string The slash command (e.g., "/mymodule")
----@param handler function|table<string,function> The handler function or table of subcommand handlers
-function Module:RegisterSlashCommand(command, handler)
-    LibRu.RegisterSlashCommand(command, handler)
 end
 
 --- Safely gets a nested submodule by dot-separated path, returning nil if any level is missing.
