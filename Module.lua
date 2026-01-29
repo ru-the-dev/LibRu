@@ -31,7 +31,7 @@ function Module.New(name, parentModule, dependencies, debug)
     ---@class LibRu.Module
     local t = setmetatable({
         Name = name,
-        Debug = debug or parentModule and parentModule.Debug or false,
+        Debug = (debug == nil) and (parentModule and parentModule.Debug or false) or debug,
         Enabled = true,
         Settings = {},
         Dependencies = dependencies,
