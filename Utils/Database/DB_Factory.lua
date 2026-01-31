@@ -3,17 +3,20 @@ if ns.LibRu == nil then return end
 
 ---@class LibRu
 local LibRu = ns.LibRu
-LibRu.Utils = LibRu.Utils or {};
+LibRu.Utils = LibRu.Utils or {}
 
+local DB_Utils = {}
+LibRu.Utils.DB = DB_Utils
 
-local DB_Utils = {};
-LibRu.Utils.DB = DB_Utils;
+local function copyDefaults(dst, src, seen)
+    seen = seen or {}
+    if seen[src] then return end
+    seen[src] = true
 
-local function copyDefaults(dst, src)
     for k, v in pairs(src) do
         if type(v) == "table" then
             dst[k] = dst[k] or {}
-            copyDefaults(dst[k], v)
+            copyDefaults(dst[k], v, seen)
         elseif dst[k] == nil then
             dst[k] = v
         end
@@ -30,16 +33,6 @@ local function walkToParent(root, path)
     return node, path[#path]
 end
 
-
-
--- Factory:
---   local MyDB = NewDatabase("SavedVariableName", DefaultsTable)
---   MyDB:Init()  -- once on ADDON_LOADED
---   MyDB:Get()
---   MyDB:ResetAll()
---   MyDB:ResetSection({ "TransmogFrame" })
---   MyDB:ResetValue({ "TransmogFrame", "SetFrameModels" })
-
 ---@class LibRu.DatabaseAPI
 ---@field Init fun(self: LibRu.DatabaseAPI): table
 ---@field Get fun(self: LibRu.DatabaseAPI): table
@@ -47,44 +40,51 @@ end
 ---@field ResetValue fun(self: LibRu.DatabaseAPI, path: string[]): any
 ---@field ResetSection fun(self: LibRu.DatabaseAPI, path: string[]): table
 
----Creates a new database with default values and API methods.
----The returned object will have both the data structure from defaults and the API methods.
+---Creates a database API that exposes data only via :Get()
 ---@generic T
----@param svName string The name of the SavedVariable
----@param defaults T The default values table
----@return T|LibRu.DatabaseAPI # Returns a table with both the data fields from defaults and the DatabaseAPI methods
+---@param svName string
+---@param defaults T
+---@return LibRu.DatabaseAPI
 function DB_Utils.CreateDatabase(svName, defaults)
-    local API = {}
+    local db = {}
+    local data = {}
     local initialized = false
 
-    function API:Init()
-        if initialized then return _G[svName] end
-        _G[svName] = _G[svName] or {}
-        copyDefaults(_G[svName], defaults)
+    local function ensure()
+        if initialized and data then
+            return data
+        end
+        local sv = _G[svName] or {}
+        _G[svName] = sv
+        copyDefaults(sv, defaults)
+        data = sv
         initialized = true
-        setmetatable(_G[svName], { __index = API })
-        return _G[svName]
+        return data
     end
 
-    function API:Get()
-        return _G[svName] or self:Init()
+    function db:Init()
+        return ensure()
     end
 
-    function API:ResetAll()
+    function db:Get()
+        return ensure()
+    end
+
+    function db:ResetAll()
         _G[svName] = {}
-        copyDefaults(_G[svName], defaults)
-        setmetatable(_G[svName], { __index = API })
-        return _G[svName]
+        data = _G[svName]
+        copyDefaults(data, defaults)
+        initialized = true
+        return data
     end
 
-    -- path: {"Section","Key",...}
-    function API:ResetValue(path)
-        local db = self:Get()
+    function db:ResetValue(path)
+        local dbData = self:Get()
         local defs = defaults
         for i = 1, #path - 1 do
             defs = defs and defs[path[i]]
         end
-        local parent, key = walkToParent(db, path)
+        local parent, key = walkToParent(dbData, path)
         local defVal = defs and defs[key]
         if type(defVal) == "table" then
             parent[key] = {}
@@ -97,42 +97,17 @@ function DB_Utils.CreateDatabase(svName, defaults)
         return parent[key]
     end
 
-    -- path: {"Section"} or deeper
-    function API:ResetSection(path)
-        local db = self:Get()
+    function db:ResetSection(path)
+        local dbData = self:Get()
         local defs = defaults
         for i = 1, #path do
             defs = defs and defs[path[i]]
         end
-        local parent, key = walkToParent(db, path)
+        local parent, key = walkToParent(dbData, path)
         parent[key] = {}
         if defs then copyDefaults(parent[key], defs) end
         return parent[key]
     end
 
-    -- Set up metatable to proxy field access to the actual data after Init
-    setmetatable(API, {
-        __index = function(t, k)
-            -- If it's an API method, return it
-            if rawget(t, k) then return rawget(t, k) end
-            -- Otherwise, try to get from the saved variable
-            if initialized and _G[svName] then
-                return _G[svName][k]
-            end
-            return nil
-        end,
-        __newindex = function(t, k, v)
-            -- Don't allow overwriting API methods
-            if rawget(t, k) ~= nil then
-                rawset(t, k, v)
-            elseif initialized and _G[svName] then
-                -- Set on the actual data table
-                _G[svName][k] = v
-            else
-                rawset(t, k, v)
-            end
-        end
-    })
-
-    return API
+    return db
 end
