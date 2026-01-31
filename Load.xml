@@ -7,12 +7,13 @@
     <Script file="DebugColors.lua"/>
     <Script file="SlashCommands.lua"/>
     <Script file="Module.lua"/>
-    <Script file="Utils/Database/DB_Factory.lua"/>
     <Script file="Utils/Frame.lua"/>
     <Script file="Utils/UrlClicker.lua"/>
     <Script file="Frames/EventFrame.lua"/>
     <Script file="Frames/ResizeButton.lua"/>
     <Script file="Frames/CollapseExtendCheckButton.lua"/>
     <Script file="Frames/ValueSlider.lua"/>
+    
     <Include file="ChangeLog/Load.xml"/>
+    <Include file="Database/Load.xml"/>
 </Ui>
