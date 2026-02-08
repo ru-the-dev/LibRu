@@ -4,7 +4,9 @@
                         https://raw.githubusercontent.com/Gethe/wow-ui-source/live/Interface/AddOns/Blizzard_SharedXML/UI.xsd">
     <Script file="LibStub.lua"/>
     <Script file="Core.lua"/>
-    <Script file="DebugColors.lua"/>
+    
+    <Include file="Debug/Load.xml"/>
+    
     <Script file="SlashCommands.lua"/>
     <Script file="Module.lua"/>
     <Script file="Utils/Frame.lua"/>
