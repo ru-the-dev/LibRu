@@ -36,6 +36,7 @@ function Module.New(name, parentModule, dependencies, debug)
         Settings = {},
         Dependencies = dependencies,
         Initialized = false,
+        Initializing = false,
         ParentModule = parentModule or nil,
         Modules = {}
     }, Module)
@@ -84,13 +85,17 @@ end
 function Module:OnInitialize() end
 
 function Module:Initialize()
-    if self.Initialized then return end
+    if self.Initialized or self.Initializing then return end
+
+    self.Initializing = true
 
     self:DebugLog("Initializing module.")
 
     -- Initialize dependencies first
     for _, dependency in ipairs(self.Dependencies) do
-        if not dependency.Initialized then
+        if dependency.Initializing and not dependency.Initialized then
+            self:DebugLog("Dependency already initializing: " .. dependency:GetFullName())
+        elseif not dependency.Initialized then
             dependency:Initialize()
         end
     end
@@ -104,7 +109,7 @@ function Module:Initialize()
         subModule:Initialize()
     end
 
-    
+    self.Initializing = false
 end
 
 --- Safely gets a nested submodule by dot-separated path, returning nil if any level is missing.
