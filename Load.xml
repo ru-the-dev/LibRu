@@ -6,6 +6,8 @@
     <Script file="Core.lua"/>
     
     <Include file="Debug/Load.xml"/>
+
+    <Script file="Colors.lua"/>
     
     <Script file="SlashCommands.lua"/>
     <Script file="Module.lua"/>

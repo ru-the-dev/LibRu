@@ -3,6 +3,10 @@ if ns.LibRu == nil then return end
 
 ---@class LibRu
 local LibRu = ns.LibRu
+local Logging = LibRu.Logging
+if not Logging then
+    error("LibRu.Logging not loaded. Check LibRu/Debug/Load.xml order.")
+end
 
 ---@class LibRu.Module
 ---@field Name string Name of the module
@@ -41,14 +45,19 @@ function Module.New(name, parentModule, dependencies, debug)
         Modules = {}
     }, Module)
 
+    if parentModule and parentModule.Logger then
+        t.Logger = parentModule.Logger
+    else
+        t.Logger = Logging.GetLogger(t)
+    end
+
     -- Register this module as a submodule of its parent, if applicable
     if parentModule then
         parentModule.Modules[name] = t
     end
 
     -- Assign a rotating debug color to this module
-    local colorHex = LibRu.DebugColors[LibRu._nextDebugColorIndex] or "ffffff"
-    LibRu._nextDebugColorIndex = (LibRu._nextDebugColorIndex % #LibRu.DebugColors) + 1
+    local colorHex = LibRu.GetNewDebugColorHex and LibRu.GetNewDebugColorHex() or "ffffff"
     t.DebugColorHex = colorHex
     t.DebugColorPrefix = "|cff" .. colorHex
     t.DebugColorSuffix = "|r"
@@ -72,29 +81,17 @@ function Module:GetFullName(colored)
     return table.concat(parts, ".")
 end
 
-function Module:DebugLog(message)
-    if self.Debug then
-        local coloredFullName = self:GetFullName(true)
-        print("Module [" .. coloredFullName .. "]: " .. tostring(message))
-    end
-end
-
--- Virtual hook: modules should implement this for their own init logic.
--- It can be overridden; default does nothing.
----@virtual
-function Module:OnInitialize() end
-
 function Module:Initialize()
     if self.Initialized or self.Initializing then return end
 
     self.Initializing = true
 
-    self:DebugLog("Initializing module.")
+    self:LogInfo("Initializing module.")
 
     -- Initialize dependencies first
     for _, dependency in ipairs(self.Dependencies) do
         if dependency.Initializing and not dependency.Initialized then
-            self:DebugLog("Dependency already initializing: " .. dependency:GetFullName())
+            self:LogWarning("Dependency already initializing: " .. dependency:GetFullName())
         elseif not dependency.Initialized then
             dependency:Initialize()
         end
@@ -110,6 +107,54 @@ function Module:Initialize()
     end
 
     self.Initializing = false
+end
+
+-- Virtual hook: modules should implement this for their own init logic.
+-- It can be overridden; default does nothing.
+---@virtual
+function Module:OnInitialize() end
+
+
+function Module:Log(level, message)
+    local levelName = Logging.NormalizeLevel(level)
+    if not levelName then
+        error("Invalid log level: " .. tostring(level))
+    end
+    local logger = self.Logger or Logging.GetLogger(self)
+    if logger and not logger:IsEnabled(levelName) then
+        return
+    end
+    local coloredFullName = self:GetFullName(true)
+    local levelLabel = logger and logger:GetLevelLabel(levelName) or Logging.GetLevelLabel(levelName)
+    print("[" .. coloredFullName .. "] " .. levelLabel .. ": " .. tostring(message))
+end
+
+function Module:LogDisplay(message)
+    self:Log("DISPLAY", message)
+end
+
+function Module:LogInfo(message)
+    self:Log("INFO", message)
+end
+
+function Module:LogWarning(message)
+    self:Log("WARNING", message)
+end
+
+function Module:LogError(message)
+    self:Log("ERROR", message)
+end
+
+function Module:SetLogLevel(level)
+    local logger = self.Logger or Logging.GetLogger(self)
+    if not logger then return end
+    logger:SetLevel(level)
+end
+
+function Module:GetLogLevel()
+    local logger = self.Logger or Logging.GetLogger(self)
+    if not logger then return end
+    return logger.Level
 end
 
 --- Safely gets a nested submodule by dot-separated path, returning nil if any level is missing.
