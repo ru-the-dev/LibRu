@@ -68,12 +68,6 @@ function Module:GetFullName(colored)
     return table.concat(parts, ".")
 end
 
-function Module:DebugLog(message)
-    if self.Debug then
-        LibRu.Logging.LogDisplay(tostring(message), self.LogContext)
-    end
-end
-
 ---@param level LibRu.Logging.LogLevel
 ---@param message string
 function Module:Log(level, message)
@@ -111,12 +105,12 @@ function Module:Initialize()
 
     self.Initializing = true
 
-    self:DebugLog("Initializing module.")
+    self:LogInfo("Initializing module.")
 
     -- Initialize dependencies first
     for _, dependency in ipairs(self.Dependencies) do
         if dependency.Initializing and not dependency.Initialized then
-            self:DebugLog("Dependency already initializing: " .. dependency:GetFullName())
+            self:LogWarning("Dependency already initializing: " .. dependency:GetFullName())
         elseif not dependency.Initialized then
             dependency:Initialize()
         end
