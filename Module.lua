@@ -29,7 +29,7 @@ function Module.New(name, parentModule, dependencies, debug)
     end
 
     ---@class LibRu.Module
-    local t = setmetatable({
+    local instance = setmetatable({
         Name = name,
         Debug = (debug == nil) and (parentModule and parentModule.Debug or false) or debug,
         Enabled = true,
@@ -38,22 +38,18 @@ function Module.New(name, parentModule, dependencies, debug)
         Initialized = false,
         Initializing = false,
         ParentModule = parentModule or nil,
-        Modules = {}
+        Modules = {},
     }, Module)
 
     -- Register this module as a submodule of its parent, if applicable
     if parentModule then
-        parentModule.Modules[name] = t
+        parentModule.Modules[name] = instance
     end
 
-    -- Assign a rotating debug color to this module
-    local colorHex = LibRu.DebugColors[LibRu._nextDebugColorIndex] or "ffffff"
-    LibRu._nextDebugColorIndex = (LibRu._nextDebugColorIndex % #LibRu.DebugColors) + 1
-    t.DebugColorHex = colorHex
-    t.DebugColorPrefix = "|cff" .. colorHex
-    t.DebugColorSuffix = "|r"
+    instance.DebugColor = LibRu.Colors.GetNextDebugColor();
+    instance.LogContext = LibRu.Logging.LogContext.New(instance:GetFullName(true), "DISPLAY", "INFO", "WARNING", "ERROR");
 
-    return t
+    return instance
 end
 
 ---@param colored? boolean Whether to return colored names (defaults to false)
@@ -63,8 +59,8 @@ function Module:GetFullName(colored)
     while current do
         local name = tostring(current.Name)
         local coloredName = name
-        if colored and current.DebugColorHex then
-            coloredName = (current.DebugColorPrefix or "|cffFFFFFF") .. name .. (current.DebugColorSuffix or "|r")
+        if colored and current.DebugColor then
+            coloredName = LibRu.Colors.ChatFormat(current.DebugColor, name, true)
         end
         table.insert(parts, 1, coloredName)  -- Insert at beginning to build from root to leaf
         current = current.ParentModule
@@ -74,10 +70,36 @@ end
 
 function Module:DebugLog(message)
     if self.Debug then
-        local coloredFullName = self:GetFullName(true)
-        print("Module [" .. coloredFullName .. "]: " .. tostring(message))
+        LibRu.Logging.LogDisplay(tostring(message), self.LogContext)
     end
 end
+
+---@param level LibRu.Logging.LogLevel
+---@param message string
+function Module:Log(level, message)
+    LibRu.Logging.Log(level, message, self.LogContext)
+end
+
+---@param message string
+function Module:LogDisplay(message)
+    LibRu.Logging.LogDisplay(message, self.LogContext)
+end
+
+---@param message string
+function Module:LogInfo(message)
+    LibRu.Logging.LogInfo(message, self.LogContext)
+end
+
+---@param message string
+function Module:LogWarning(message)
+    LibRu.Logging.LogWarning(message, self.LogContext)
+end
+
+---@param message string
+function Module:LogError(message)
+    LibRu.Logging.LogError(message, self.LogContext)
+end
+
 
 -- Virtual hook: modules should implement this for their own init logic.
 -- It can be overridden; default does nothing.
