@@ -18,17 +18,10 @@ local Logging = LibRu.Logging or {}
 LibRu.Logging = Logging;
 
 local globalContext = Logging.LogContext.New("LibRu",
-    "DISPLAY",
     "INFO",
     "WARNING",
     "ERROR"
 );
-
-
---- ======================================================
---- Public API
---- ======================================================
-
 
 function Logging.GetGlobalContext()
     return globalContext
@@ -57,12 +50,6 @@ end
 
 ---@param message string
 ---@param context? LibRu.LogContext
-function Logging.LogDisplay(message, context)
-    Logging.Log("DISPLAY", message, context)
-end
-
----@param message string
----@param context? LibRu.LogContext
 function Logging.LogInfo(message, context)
     Logging.Log("INFO", message, context)
 end
@@ -78,5 +65,3 @@ end
 function Logging.LogError(message, context)
     Logging.Log("ERROR", message, context)
 end
-
-

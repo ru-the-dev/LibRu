@@ -12,22 +12,18 @@ end
 ---@class LibRu.Logging
 LibRu.Logging = LibRu.Logging or {};
 
----@alias LibRu.Logging.LogLevel "DISPLAY" | "INFO" | "WARNING" | "ERROR"
+---@alias LibRu.Logging.LogLevel "INFO" | "WARNING" | "ERROR"
 LibRu.Logging.LOG_LEVELS = {
-    DISPLAY = {
-        Value = bit.lshift(1, 0),
-        Color = LibRu.Colors.All.White,
-    },
     INFO = {
-        Value = bit.lshift(1, 1),
+        Value = bit.lshift(1, 0),
         Color = LibRu.Colors.All.LightSkyBlue,
     },
     WARNING = {
-        Value = bit.lshift(1, 2),
+        Value = bit.lshift(1, 1),
         Color = LibRu.Colors.All.Gold,
     },
     ERROR = {
-        Value = bit.lshift(1, 3),
+        Value = bit.lshift(1, 2),
         Color = LibRu.Colors.All.Red,
     }
 }

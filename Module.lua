@@ -17,9 +17,8 @@ Module.__index = Module
 ---@param name string Name of the module
 ---@param parentModule? LibRu.Module Optional parent module
 ---@param dependencies? LibRu.Module[] Optional list of dependencies
----@param debug? boolean should debugging be enabled for this module
 ---@return LibRu.Module
-function Module.New(name, parentModule, dependencies, debug)
+function Module.New(name, parentModule, dependencies)
     -- Validate dependencies exist at creation time
     dependencies = dependencies or {}
     for i, dep in ipairs(dependencies) do
@@ -31,7 +30,6 @@ function Module.New(name, parentModule, dependencies, debug)
     ---@class LibRu.Module
     local instance = setmetatable({
         Name = name,
-        Debug = (debug == nil) and (parentModule and parentModule.Debug or false) or debug,
         Enabled = true,
         Settings = {},
         Dependencies = dependencies,
@@ -68,12 +66,6 @@ function Module:GetFullName(colored)
     return table.concat(parts, ".")
 end
 
----@param level LibRu.Logging.LogLevel
----@param message string
-function Module:Log(level, message)
-    LibRu.Logging.Log(level, message, self.LogContext)
-end
-
 ---@param message string
 function Module:LogDisplay(message)
     LibRu.Logging.LogDisplay(message, self.LogContext)
@@ -94,6 +86,11 @@ function Module:LogError(message)
     LibRu.Logging.LogError(message, self.LogContext)
 end
 
+---@param level LibRu.Logging.LogLevel
+---@param message string
+function Module:Log(level, message)
+    LibRu.Logging.Log(level, message, self.LogContext)
+end
 
 -- Virtual hook: modules should implement this for their own init logic.
 -- It can be overridden; default does nothing.
