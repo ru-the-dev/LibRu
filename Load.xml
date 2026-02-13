@@ -5,6 +5,8 @@
     <Script file="LibStub.lua"/>
     <Script file="Core.lua"/>
     
+    <Script file="Colors.lua"/>
+    
     <Include file="Debug/Load.xml"/>
     
     <Script file="SlashCommands.lua"/>
