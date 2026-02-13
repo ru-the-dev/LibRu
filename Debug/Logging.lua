@@ -23,15 +23,13 @@ local globalContext = Logging.LogContext.New("LibRu",
     "ERROR"
 );
 
-function Logging.GetGlobalContext()
-    return globalContext
-end
-
 ---@param level LibRu.Logging.LogLevel
 ---@param message string
 ---@param context? LibRu.LogContext
 function Logging.Log(level, message, context)
     context = context or globalContext;
+
+    if not context.Enabled then return end
 
     --- early out if the logging level is not enabled for this context.
     if not context:AreLevelsEnabled(level) then return end

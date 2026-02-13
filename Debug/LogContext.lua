@@ -34,6 +34,7 @@ LibRu.Logging.LOG_LEVELS = {
 ---@class LibRu.LogContext
 ---@field Name string
 ---@field LogLevelFlag number
+---@field Enabled boolean
 local LogContext = {}
 
 LibRu.Logging.LogContext = LogContext;
@@ -52,9 +53,9 @@ function LogContext.New(name, ...)
 
     instance.Name = name or "Unnamed"
     instance.LogLevelFlag = 0;
+    instance.Enabled = true;
 
     instance:EnableLevels(...)
-
     return instance
 end
 

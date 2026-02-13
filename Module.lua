@@ -45,7 +45,7 @@ function Module.New(name, parentModule, dependencies)
     end
 
     instance.DebugColor = LibRu.Colors.GetNextDebugColor();
-    instance.LogContext = LibRu.Logging.LogContext.New(instance:GetFullName(true), "DISPLAY", "INFO", "WARNING", "ERROR");
+    instance.LogContext = LibRu.Logging.LogContext.New(instance:GetFullName(true), "INFO", "WARNING", "ERROR");
 
     return instance
 end
@@ -91,6 +91,20 @@ end
 function Module:Log(level, message)
     LibRu.Logging.Log(level, message, self.LogContext)
 end
+
+---@param enabled boolean
+---@param recursive? boolean
+function Module:SetLoggingEnabled(enabled, recursive)
+    self.LogContext.Enabled = enabled
+
+    if recursive == true then
+        for _, subModule in pairs(self.Modules) do
+            subModule:SetLoggingEnabled(enabled, true)
+        end
+    end
+end
+
+
 
 -- Virtual hook: modules should implement this for their own init logic.
 -- It can be overridden; default does nothing.
