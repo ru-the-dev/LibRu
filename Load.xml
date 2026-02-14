@@ -11,6 +11,7 @@
     
     <Script file="SlashCommands.lua"/>
     <Script file="Module.lua"/>
+    <Script file="Utils/Restrictions.lua"/>
     <Script file="Utils/Frame.lua"/>
     <Script file="Utils/UrlClicker.lua"/>
     <Script file="Frames/EventFrame.lua"/>
