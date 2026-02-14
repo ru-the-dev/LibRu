@@ -90,6 +90,7 @@ end
 
 ---@generic T
 ---@param self LibRu.Database.API|{_data: T}
+---@param path string[]
 function DB_API:ResetSection(path)
     local db = self._data
     local defs = self._defaults
