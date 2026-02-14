@@ -37,6 +37,17 @@ local function walkToParent(root, path)
     return node, path[#path]
 end
 
+local function splitPath(path)
+    if type(path) ~= "string" then
+        error("path must be a dot-separated string", 2)
+    end
+    local t = {}
+    for token in string.gmatch(path, "([^.]+)") do
+        t[#t+1] = token
+    end
+    return t
+end
+
 ---@generic T
 ---@param self LibRu.Database.API|{_data: T}
 function DB_API:Init()
@@ -69,13 +80,15 @@ end
 
 ---@generic T
 ---@param self LibRu.Database.API|{_data: T}
+---@param path string Dot-separated path (e.g. "profile.items.foo")
 function DB_API:ResetValue(path)
+    local pathTbl = splitPath(path)
     local db = self._data
     local defs = self._defaults
-    for i = 1, #path - 1 do
-        defs = defs and defs[path[i]]
+    for i = 1, #pathTbl - 1 do
+        defs = defs and defs[pathTbl[i]]
     end
-    local parent, key = walkToParent(db, path)
+    local parent, key = walkToParent(db, pathTbl)
     local defVal = defs and defs[key]
     if type(defVal) == "table" then
         parent[key] = {}
@@ -90,14 +103,15 @@ end
 
 ---@generic T
 ---@param self LibRu.Database.API|{_data: T}
----@param path string[]
+---@param path string Dot-separated path (e.g. "profile.items")
 function DB_API:ResetSection(path)
+    local pathTbl = splitPath(path)
     local db = self._data
     local defs = self._defaults
-    for i = 1, #path do
-        defs = defs and defs[path[i]]
+    for i = 1, #pathTbl do
+        defs = defs and defs[pathTbl[i]]
     end
-    local parent, key = walkToParent(db, path)
+    local parent, key = walkToParent(db, pathTbl)
     parent[key] = {}
     if defs then copyDefaults(parent[key], defs) end
     return parent[key]
