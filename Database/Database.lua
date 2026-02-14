@@ -13,7 +13,7 @@ LibRu.Database = Database;
 ---@generic T
 ---@param dataTable table The live table (e.g. MySavedVar or {})
 ---@param defaults T The template table
----@return LibRu.Database.API|{data: T}
+---@return LibRu.Database.API|{_data: T}
 function Database.Create(dataTable, defaults)
     ---@type LibRu.Database.API
     local instance = setmetatable({}, { __index = Database.API })
